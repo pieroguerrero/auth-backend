@@ -1,0 +1,48 @@
+{
+  "name": "jwt-passport-auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./build/index.js",
+    "compile-start": "concurrently \"tsc -w\" \"nodemon ./build/index.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pieroguerrero/jwt-passport-auth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pieroguerrero/jwt-passport-auth/issues"
+  },
+  "homepage": "https://github.com/pieroguerrero/jwt-passport-auth#readme",
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.14",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/morgan": "^1.9.3",
+    "@types/passport": "^1.0.11",
+    "@types/passport-jwt": "^3.0.7",
+    "@types/passport-local": "^1.0.34",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "concurrently": "^7.5.0",
+    "eslint": "^8.27.0",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.7.2",
+    "morgan": "^1.10.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
+  }
+}
