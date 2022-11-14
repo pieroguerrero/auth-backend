@@ -3,6 +3,7 @@ import { Response, NextFunction } from "express";
 import { generalValues } from "../util/Enums";
 import HttpStatusCodes from "../util/HttpStatusCodes";
 import { IReq } from "types/shared";
+import config from "./../config";
 
 const TokenValidation = (
   req: IReq<{ userId: string }>,
@@ -15,13 +16,11 @@ const TokenValidation = (
   if (!token)
     return res.status(HttpStatusCodes.UNAUTHORIZED).json("Access denied.");
 
-  const payload = jwt.verify(
-    token,
-    process.env.SECRET_TOKEN_KEY || generalValues.NO_SECRET_KEY
-  );
+  const payload = jwt.verify(token, config.jwtSecretToken);
 
   console.log("payload:", payload);
-  //req.body.userId = ;
+
+  //TODO: req.body.userId = ; Here is pending to add the Id of the user so it can be used further in the app
 
   next();
 };

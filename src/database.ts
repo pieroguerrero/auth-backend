@@ -1,10 +1,8 @@
+import config from "./config";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-dotenv.config();
 
 const connectToDatabase = () => {
-  const mongoDB =
-    process.env.MONGODB_URI || "No Database connection string provided";
+  const mongoDB = config.DBConnectionString;
 
   mongoose
     .connect(mongoDB)
