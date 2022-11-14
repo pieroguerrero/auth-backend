@@ -14,8 +14,6 @@ const configurePassportMiddlewares = () => {
     new LocalStrategy(
       //username and password come from the "login" controller. The user enter these values and its intercepted by this middleware
       async (username: string, password: string, done) => {
-        console.log("LocalStrategy->password=", password);
-        console.log("LocalStrategy->username=", username);
         try {
           const user = await User.findOne({ username }).exec();
 
@@ -42,9 +40,11 @@ const configurePassportMiddlewares = () => {
   passport.use(
     new JWTStrategy(
       {
-        jwtFromRequest: (req) => {
-          return req.cookies.jwt;
-        }, //We take the 'token' from the cookies
+        //Option1: Take the 'token' from the cookies
+        //Option 2: Take the 'token' from the header key: "Authorizarion"="Bearer <Token>"
+        jwtFromRequest: config.tokenFromCookie
+          ? (req) => req.cookies[config.jwtCookieName]
+          : passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: config.jwtSecretToken, //This secret token is needed so the JWTStrategy would be able to verify the encrypted password
         //"audience:"yoursite.net" property can be added in order to limit the callers addresses to only the permited one.
       },
