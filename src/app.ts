@@ -6,18 +6,15 @@ import { configurePassportMiddlewares } from "./passportConfig";
 import { authRoutes } from "./routes/authRouter";
 import config from "./config";
 import cors from "cors";
-import corsMiddleware from "./middlewares/corsMiddleware";
 
 const app: Application = express();
 
 //#region Settings
 app.set("port", config.Port);
-//app.options("*", cors(corsMiddleware));
-
 //#endregion
 
-//cors(corsMiddleware);
-
+//#region Middlewares
+app.use(cors());
 app.use(helmet());
 
 app.use(morgan("dev")); //To print in the dev console, all the requests that are comming to the application
@@ -32,7 +29,7 @@ configurePassportMiddlewares();
 //#endregion
 
 //#region Routes
-app.use("/api/auth", cors(corsMiddleware), authRoutes);
+app.use("/api/auth", authRoutes);
 
 //#endregion
 export default app;
