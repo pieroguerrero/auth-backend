@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { body, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import passport from "passport";
 import User, { IUser } from "../models/user";
@@ -6,7 +7,15 @@ import jwt from "jsonwebtoken";
 import config from "./../config";
 import HttpStatusCodes from "../util/HttpStatusCodes";
 
-const signUp = async (req: Request, res: Response) => {
+const registerUser = async (req: Request, res: Response) => {
+  const validationErrors = validationResult(req);
+
+  if (!validationErrors.isEmpty()) {
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ "Signup errors": validationErrors.array() });
+  }
+
   try {
     const user = new User({
       username: req.body.username,
@@ -24,46 +33,56 @@ const signUp = async (req: Request, res: Response) => {
   }
 };
 
+const signUp = [
+  body("email").trim().isEmail(),
+  body("username").trim().isLength({ min: 5 }),
+  body(
+    "password",
+    "Password should have at least: eigth characters, one upper case character, one lower case character and one number."
+  ).isStrongPassword({
+    minLength: 8,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 0,
+    minLowercase: 1,
+  }),
+  registerUser,
+];
+
 const signIn = async (req: Request, res: Response) => {
   passport.authenticate("local", { session: false }, (error, user: IUser) => {
     if (error || !user) {
-      return res.status(400).json({ error });
+      return res.status(HttpStatusCodes.BAD_REQUEST).json({ error });
     }
 
     //We create the payload to be encrypted then in the JWT
     const payload = {
       id: user._id,
-      usename: user.username,
+      username: user.username,
       email: user.email,
     };
 
-    req.login(payload, { session: false }, (error) => {
-      if (error) {
-        res.status(HttpStatusCodes.BAD_REQUEST).send({ error });
-      }
-
+    try {
       //generate a signed json web token and return it in the response
-      const token = jwt.sign(JSON.stringify(payload), config.jwtSecretToken);
+      const token = jwt.sign(payload, config.jwtSecretToken, {
+        expiresIn: config.jwtTokenExpiration,
+      });
 
       //assign our jwt to the cookie. If you comment his, then you are goin to use: Authorizarion Bearer <Token>
       if (config.tokenFromCookie) {
         res.cookie(config.jwtCookieName, token, { httpOnly: true });
       }
 
-      res
-        .status(HttpStatusCodes.OK)
-        .json({ username: user.username, email: user.email, token });
-    });
+      res.status(HttpStatusCodes.OK).json({ ...payload, token });
+    } catch (error) {
+      console.log(error);
+    }
   })(req, res);
-
-  //auth
 };
 
 const profile = (req: Request, res: Response) => {
-  res.send(
-    "Profile user= " +
-      (req.user ? JSON.stringify(req.user) : "User data was not sent.")
-  );
+  //We get the req.user with the information from the user
+  res.json(req.user);
 };
 
 export { profile, signUp, signIn };

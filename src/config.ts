@@ -10,9 +10,12 @@ const config = Object.freeze({
   SaltLength: process.env.TOKE_SALT_LENGTH
     ? parseInt(process.env.TOKE_SALT_LENGTH)
     : 10,
-  jwtTokenExpirationInMS: process.env.JWT_EXPIRATION_IN_MS
-    ? parseInt(process.env.JWT_EXPIRATION_IN_MS)
-    : 900000,
+  /**
+   * Expressed in seconds or a string describing a time span zeit/ms. Eg: 60, "2 days", "10h", "7d"
+   */
+  jwtTokenExpiration: process.env.JWT_EXPIRATION_IN_SECONDS
+    ? parseInt(process.env.JWT_EXPIRATION_IN_SECONDS)
+    : 900,
   tokenFromCookie: process.env.TOKEN_FROM_COOKIE === "true" ? true : false,
   jwtCookieName: process.env.JWT_TOKEN_COOKIE_NAME
     ? process.env.JWT_TOKEN_COOKIE_NAME

@@ -49,10 +49,9 @@ const configurePassportMiddlewares = () => {
         //"audience:"yoursite.net" property can be added in order to limit the callers addresses to only the permited one.
       },
       (jwtPayload, done) => {
-        //We check if the token has expired
-        if (Date.now() > jwtPayload.expires) {
-          return done("jwt expired");
-        }
+        //Add other checkups in case there is something not good  and return done("Error message", null)
+        //But the main idea here is to have all the information needed for the Router that are going to be served after this middleware is called. E.g: If we retrived all the user data from the database and store it in the "user" variable, then we should pass this variable to the done function in the form done(null, user). So in this way the subceding controller functions will get in the req.user property the 'user' object we just retrived.
+        //Will be good idea to form the payload with all the information needed from the user so we dont have to call the databse in this callback
 
         return done(null, jwtPayload);
       }
