@@ -85,4 +85,9 @@ const profile = (req: Request, res: Response) => {
   res.json(req.user);
 };
 
-export { profile, signUp, signIn };
+const about = (req: Request, res: Response) => {
+  //We get the req.user with the information from the user
+  res.json("About!");
+};
+
+export { profile, signUp, signIn, about };
