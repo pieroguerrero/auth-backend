@@ -1,4 +1,4 @@
-import config from "./config";
+import config from "./envConfig";
 import mongoose from "mongoose";
 
 const connectToDatabase = () => {

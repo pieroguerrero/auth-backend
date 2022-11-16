@@ -2,8 +2,8 @@ import passport from "passport";
 import passportLocal from "passport-local";
 import passportJWT from "passport-jwt";
 import bcrypt from "bcryptjs";
-import User from "./models/user";
-import config from "./config";
+import User from "../api/models/user";
+import config from "./envConfig";
 
 const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
@@ -18,16 +18,20 @@ const configurePassportMiddlewares = () => {
           const user = await User.findOne({ username }).exec();
 
           if (user) {
+            if (!user.verified) {
+              return done({ message: "User not verified." }, null);
+            }
+
             const isPasswordCorrect = await bcrypt.compare(
               password,
               user.password
             );
 
-            if (isPasswordCorrect) {
-              return done(null, user);
+            if (!isPasswordCorrect) {
+              return done({ message: "Incorrect password." }, null);
             }
 
-            return done(null, false, { message: "Incorrect password" });
+            return done(null, user);
           }
         } catch (error) {
           done(error);

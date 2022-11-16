@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
-import { generalValues } from "./util/Enums";
+import { generalValues } from "../api/util/Enums";
 dotenv.config();
 
-const config = Object.freeze({
+const envValues = Object.freeze({
   Port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
   jwtSecretToken: process.env.SECRET_TOKEN_KEY || generalValues.NO_SECRET_KEY,
   DBConnectionString:
@@ -20,6 +20,9 @@ const config = Object.freeze({
   jwtCookieName: process.env.JWT_TOKEN_COOKIE_NAME
     ? process.env.JWT_TOKEN_COOKIE_NAME
     : "jwt12345",
+  GmailHost: process.env.EMAIL_GMAIL_HOST || "",
+  GmailAddress: process.env.EMAIL_GMAIL_ADDRESS || "",
+  GmailPassword: process.env.EMAIL_GMAIL_PASS || "",
 });
 
-export default config;
+export default envValues;

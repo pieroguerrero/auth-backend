@@ -6,25 +6,22 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  verified: boolean;
   // getEncrytedPassword(): Promise<string>;
   // validatePassword(passwordToCompare: string): Promise<boolean>;
 }
 
 const userSchema = new Schema({
-  username: { type: String, required: true, min: 4, lowercase: true },
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    min: 4,
+    lowercase: true,
+  },
   password: { type: String, required: true },
   email: { type: String, unique: true, required: true, lowercase: true },
+  verified: { type: Boolean, required: true, default: false },
 });
-
-// userSchema.methods.getEncrytedPassword = async function (): Promise<string> {
-//   const salt = await bcrypt.genSalt();
-//   return bcrypt.hash(this.password, salt);
-// };
-
-// userSchema.methods.validatePassword = async function (
-//   passwordToCompare: string
-// ): Promise<boolean> {
-//   return bcrypt.compare(passwordToCompare, this.password);
-// };
 
 export default model<IUser>("User", userSchema);

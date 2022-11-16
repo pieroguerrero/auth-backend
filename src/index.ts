@@ -1,5 +1,5 @@
-import app from "./app";
-import { connectToDatabase } from "./database";
+import app from "./config/appConfig";
+import { connectToDatabase } from "./config/databaseConfig";
 
 const main = () => {
   connectToDatabase();

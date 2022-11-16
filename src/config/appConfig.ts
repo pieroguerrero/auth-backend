@@ -3,8 +3,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { configurePassportMiddlewares } from "./passportConfig";
-import { authRoutes } from "./routes/authRouter";
-import config from "./config";
+import { authRoutes } from "../api/routers/authRouter";
+import config from "./envConfig";
 import cors from "cors";
 
 const app: Application = express();
