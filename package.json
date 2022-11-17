@@ -1,5 +1,5 @@
 {
-  "name": "jwt-passport-auth",
+  "name": "auth-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pieroguerrero/jwt-passport-auth.git"
+    "url": "git+https://github.com/pieroguerrero/auth-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pieroguerrero/jwt-passport-auth/issues"
+    "url": "https://github.com/pieroguerrero/auth-backend/issues"
   },
-  "homepage": "https://github.com/pieroguerrero/jwt-passport-auth#readme",
+  "homepage": "https://github.com/pieroguerrero/auth-backend#readme",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "^1.7.2",
