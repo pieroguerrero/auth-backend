@@ -119,7 +119,7 @@ const signIn = async (req: Request, res: Response) => {
   })(req, res);
 };
 
-const confirmEmail = async (req: Request, res: Response) => {
+const verifyAccount = async (req: Request, res: Response) => {
   try {
     const jwtPayload = jwt.verify(req.params.token, envValues.jwtSecretToken);
 
@@ -153,4 +153,4 @@ const confirmEmail = async (req: Request, res: Response) => {
   return;
 };
 
-export { signUp, signIn, confirmEmail };
+export { signUp, signIn, verifyAccount };

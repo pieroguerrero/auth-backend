@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import compression from "compression";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true })); //To encode the data that is co
 if (config.tokenFromCookie) {
   app.use(cookieParser());
 }
+app.use(compression());
 
 configurePassportMiddlewares();
 //#endregion
