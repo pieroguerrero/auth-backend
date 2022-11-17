@@ -50,4 +50,23 @@ const sendGmailEmail = (
   return sendEmail(GmailConfig, to, subject, text, html);
 };
 
-export { sendGmailEmail };
+/**
+ * Sends an email requesting verification for user accounts
+ * @param userEmail Destination email
+ * @param verificationURL URL to use as verification
+ * @returns
+ */
+const sendVerificationEmail = async (
+  userEmail: string,
+  verificationURL: string
+) => {
+  //send email
+  return await sendGmailEmail(
+    userEmail,
+    "Email Confirmation",
+    "Confirm your email: " + verificationURL,
+    "" //no HTML template
+  );
+};
+
+export { sendGmailEmail, sendVerificationEmail };

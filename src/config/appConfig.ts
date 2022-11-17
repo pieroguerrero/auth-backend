@@ -6,6 +6,8 @@ import { configurePassportMiddlewares } from "./passportConfig";
 import { authRoutes } from "../api/routers/authRouter";
 import config from "./envConfig";
 import cors from "cors";
+import { userRoutes } from "../api/routers/userRoutes";
+import { homeRoutes } from "../api/routers/homeRoutes";
 
 const app: Application = express();
 
@@ -29,7 +31,9 @@ configurePassportMiddlewares();
 //#endregion
 
 //#region Routes
+app.use("/api/home/", homeRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user/", userRoutes);
 
 //#endregion
 export default app;

@@ -1,71 +1,74 @@
+import { IAuthPayload } from "../Interfaces/shared";
 import { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import bcrypt from "bcryptjs";
-import passport from "passport";
-import User, { IUser } from "../models/user";
 import jwt from "jsonwebtoken";
-import config from "../../config/envConfig";
-import HttpStatusCodes from "../util/HttpStatusCodes";
-import { sendGmailEmail } from "../../api/services/emailService";
+import passport from "passport";
+import { sendVerificationEmail } from "../services/emailService";
+import {
+  generateAuthorizationToken,
+  getUserVerificationURL,
+} from "../services/jwtService";
+import { createUser } from "../services/userService";
 import envValues from "../../config/envConfig";
+import User, { IUser } from "../models/user";
+import HttpStatusCodes from "../util/HttpStatusCodes";
+
+const returnErrorMessage = (res: Response, errorMessage: unknown) => {
+  if (typeof errorMessage === "string") {
+    res.status(HttpStatusCodes.BAD_REQUEST).json({ message: errorMessage });
+    return;
+  }
+
+  if (errorMessage instanceof Error) {
+    res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: errorMessage.message + " -> " + errorMessage.stack });
+    return;
+  }
+
+  res.status(HttpStatusCodes.BAD_REQUEST).json({ message: errorMessage });
+};
 
 const registerUser = async (req: Request, res: Response) => {
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
-    res
-      .status(HttpStatusCodes.BAD_REQUEST)
-      .json({ message: validationErrors.array() });
+    returnErrorMessage(res, validationErrors.array());
     return;
   }
 
   try {
-    //verify the new username is unique
-    const existingUser = await User.find({
-      $or: [{ username: req.body.username }, { email: req.body.email }],
-    });
+    const user = await createUser(
+      req.body.username,
+      req.body.email,
+      req.body.password
+    );
 
-    if (existingUser.length > 0) {
-      res.status(HttpStatusCodes.BAD_REQUEST).json({
-        message: "The information provided belongs to an existing user!",
-      });
+    if (typeof user === "string") {
+      returnErrorMessage(res, "User was not created: " + user);
       return;
     }
 
-    //create the user with the Verified flag set to FALSE (default)
-    const user = new User({
-      username: req.body.username,
-      password: await bcrypt.hash(req.body.password, config.SaltLength),
-      email: req.body.email,
-    });
-
-    const createdUSer = await user.save();
-
-    //create token and url to be sent
-    const token = jwt.sign({ userid: user._id }, config.jwtSecretToken, {
-      expiresIn: "1d",
-    });
-
-    const emailConfirmationURL =
-      "http://localhost:3000/api/auth/emailconfirmation/" + token;
-
-    //send email
-    sendGmailEmail(
-      user.email,
-      "Email Confirmation",
-      "Confirm your email: " + emailConfirmationURL,
-      ""
+    const requesOriginAddress = req.protocol + "://" + req.get("host");
+    const verificationURL = getUserVerificationURL(
+      user._id,
+      requesOriginAddress
     );
-    //let the user know that an email has been sent.
 
-    res.status(200).json({ username: createdUSer.username });
-  } catch (err) {
-    res.status(HttpStatusCodes.BAD_REQUEST).send({
-      message: err,
-    });
+    const emailSent = await sendVerificationEmail(user.email, verificationURL);
+
+    if (!emailSent) {
+      returnErrorMessage(
+        res,
+        "User was created but request verification email was not sent."
+      );
+      return;
+    }
+
+    res.status(HttpStatusCodes.OK).json({ username: user.username });
+  } catch (error) {
+    returnErrorMessage(res, error);
   }
-
-  return;
 };
 
 const signUp = [
@@ -92,7 +95,7 @@ const signIn = async (req: Request, res: Response) => {
     }
 
     //We create the payload to be encrypted then in the JWT
-    const payload = {
+    const payload: IAuthPayload = {
       id: user._id,
       username: user.username,
       email: user.email,
@@ -100,13 +103,11 @@ const signIn = async (req: Request, res: Response) => {
 
     try {
       //generate a signed json web token and return it in the response
-      const token = jwt.sign(payload, config.jwtSecretToken, {
-        expiresIn: config.jwtTokenExpiration,
-      });
+      const token = generateAuthorizationToken(payload);
 
       //assign our jwt to the cookie. If you comment his, then you are goin to use: Authorizarion Bearer <Token>
-      if (config.tokenFromCookie) {
-        res.cookie(config.jwtCookieName, token, { httpOnly: true });
+      if (envValues.tokenFromCookie) {
+        res.cookie(envValues.jwtCookieName, token, { httpOnly: true });
       }
 
       res.status(HttpStatusCodes.OK).json({ ...payload, token });
@@ -123,9 +124,7 @@ const confirmEmail = async (req: Request, res: Response) => {
     const jwtPayload = jwt.verify(req.params.token, envValues.jwtSecretToken);
 
     if (typeof jwtPayload == "string" || !jwtPayload.userid) {
-      res
-        .status(HttpStatusCodes.BAD_REQUEST)
-        .json({ message: "Invalid Token." });
+      res.status(HttpStatusCodes.BAD_REQUEST).json(jwtPayload);
       return;
     }
 
@@ -154,14 +153,4 @@ const confirmEmail = async (req: Request, res: Response) => {
   return;
 };
 
-const profile = (req: Request, res: Response) => {
-  //We get the req.user with the information from the user
-  res.json(req.user);
-};
-
-const about = (req: Request, res: Response) => {
-  //We get the req.user with the information from the user
-  res.json("About!");
-};
-
-export { profile, signUp, signIn, about, confirmEmail };
+export { signUp, signIn, confirmEmail };
