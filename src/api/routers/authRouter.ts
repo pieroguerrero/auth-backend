@@ -1,12 +1,16 @@
 import { signIn, signUp, verifyAccount } from "../controllers/authControllers";
 import { Router } from "express";
 
-const router = Router();
+const getAuthRouter = () => {
+  const router = Router();
 
-router.post("/signup", signUp);
+  router.post("/signup", signUp);
 
-router.post("/signin", signIn);
+  router.post("/signin", signIn);
 
-router.get("/emailconfirmation/:token", verifyAccount);
+  router.get("/emailconfirmation/:token", verifyAccount);
 
-export { router as authRoutes };
+  return router;
+};
+
+export { getAuthRouter };

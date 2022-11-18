@@ -1,5 +1,7 @@
 import passport from "passport";
 
-const JwtTokenValidador = passport.authenticate("jwt", { session: false });
+const getJwtTokenValidador = () => {
+  return passport.authenticate("jwt", { session: false });
+};
 
-export { JwtTokenValidador };
+export { getJwtTokenValidador };

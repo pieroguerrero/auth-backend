@@ -4,11 +4,11 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { configurePassportMiddlewares } from "./passportConfig";
-import { authRoutes } from "../api/routers/authRouter";
+import { getAuthRouter } from "../api/routers/authRouter";
 import config from "./envConfig";
 import cors from "cors";
-import { userRoutes } from "../api/routers/userRoutes";
-import { homeRoutes } from "../api/routers/homeRoutes";
+import { getUserRouter } from "../api/routers/userRoutes";
+import { getHomeRouter } from "../api/routers/homeRoutes";
 
 const app: Application = express();
 
@@ -33,9 +33,9 @@ configurePassportMiddlewares();
 //#endregion
 
 //#region Routes
-app.use("/api/home/", homeRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/user/", userRoutes);
+app.use("/api/home/", getHomeRouter());
+app.use("/api/auth", getAuthRouter());
+app.use("/api/user/", getUserRouter());
 
 //#endregion
 export default app;

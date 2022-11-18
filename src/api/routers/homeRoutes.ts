@@ -1,8 +1,12 @@
 import { about } from "../../api/controllers/homeControllers";
 import { Router } from "express";
 
-const router = Router();
+const getHomeRouter = () => {
+  const router = Router();
 
-router.get("/about", about);
+  router.get("/about", about);
 
-export { router as homeRoutes };
+  return router;
+};
+
+export { getHomeRouter };
