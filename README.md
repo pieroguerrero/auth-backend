@@ -65,7 +65,7 @@
 ## Setup
 1. Clone this project by doing:
 ```
-$ git clone https://github.com/pieroguerrero/jwt-passport-auth.git
+$ git clone https://github.com/pieroguerrero/auth-backend.git
 ```
 2. Go to the folder you've just cloned the code and execute:
 ```
