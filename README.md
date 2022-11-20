@@ -1,5 +1,5 @@
 # Auth Backend
-> Typescript RESTful backend application for User Authentication and Authorization.
+> Typescript RESTful backend application template for User Authentication and Authorization.
 
 ## Table of Contents
 - Auth Backend

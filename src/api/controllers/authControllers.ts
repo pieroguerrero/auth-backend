@@ -1,5 +1,5 @@
-import { IAuthPayload } from "../Interfaces/shared";
-import { Request, Response } from "express";
+import { IAuthPayload } from "../interfaces/shared";
+import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import passport from "passport";
@@ -87,7 +87,8 @@ const signUp = [
   registerUser,
 ];
 
-const signIn = async (req: Request, res: Response) => {
+//TODO: create a middleware or validator to receive username and password
+const signIn = async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("local", { session: false }, (error, user: IUser) => {
     if (error || !user) {
       res.status(HttpStatusCodes.BAD_REQUEST).json({ message: error });
@@ -116,7 +117,7 @@ const signIn = async (req: Request, res: Response) => {
     }
 
     return;
-  })(req, res);
+  })(req, res, next);
 };
 
 const verifyAccount = async (req: Request, res: Response) => {

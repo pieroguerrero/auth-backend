@@ -1,14 +1,14 @@
-import express, { Application } from "express";
 import compression from "compression";
-import morgan from "morgan";
-import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { configurePassportMiddlewares } from "./passportConfig";
-import { getAuthRouter } from "../api/routers/authRouter";
-import config from "./envConfig";
 import cors from "cors";
-import { getUserRouter } from "../api/routers/userRoutes";
+import express, { Application } from "express";
+import helmet from "helmet";
+import morgan from "morgan";
+import { getAuthRouter } from "../api/routers/authRouter";
 import { getHomeRouter } from "../api/routers/homeRoutes";
+import { getUserRouter } from "../api/routers/userRoutes";
+import config from "./envConfig";
+import { configurePassportMiddlewares } from "./passportConfig";
 
 const app: Application = express();
 

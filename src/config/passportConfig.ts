@@ -12,27 +12,29 @@ const configurePassportMiddlewares = () => {
   //Adding the Authentication "Local" strategy middleware:
   passport.use(
     new LocalStrategy(
-      //username and password come from the "login" controller. The user enter these values and its intercepted by this middleware
+      //username and password come from the URL query parameters that are sent in the POST request. Take into considerationt that in the SignIn method we are passing the (request, response) at the end, so in this way the valies username and password can be taken.
       async (username: string, password: string, done) => {
         try {
           const user = await User.findOne({ username }).exec();
 
-          if (user) {
-            if (!user.verified) {
-              return done({ message: "User not verified." }, null);
-            }
-
-            const isPasswordCorrect = await bcrypt.compare(
-              password,
-              user.password
-            );
-
-            if (!isPasswordCorrect) {
-              return done({ message: "Incorrect password." }, null);
-            }
-
-            return done(null, user);
+          if (!user) {
+            return done("User does not exists.", null);
           }
+
+          if (!user.verified) {
+            return done("User not verified.", null);
+          }
+
+          const isPasswordCorrect = await bcrypt.compare(
+            password,
+            user.password
+          );
+
+          if (!isPasswordCorrect) {
+            return done("Incorrect password.", null);
+          }
+
+          return done(null, user);
         } catch (error) {
           done(error);
         }

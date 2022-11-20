@@ -1,4 +1,4 @@
-import { IAuthPayload } from "../../api/Interfaces/shared";
+import { IAuthPayload } from "../interfaces/shared";
 import jwt from "jsonwebtoken";
 import envValues from "../../config/envConfig";
 
