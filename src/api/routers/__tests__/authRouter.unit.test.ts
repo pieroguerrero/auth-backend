@@ -3,7 +3,7 @@ import { InboxDto, MailSlurp } from "mailslurp-client";
 import request from "supertest";
 import configureApp from "../../../config/appConfig";
 import envValues from "../../../config/envConfig";
-import { initializeMongoTestingServer } from "../../../config/tests/virtualDatabaseConfigTest";
+import { initializeMongoTestingServer } from "../../../config/test/virtualDatabaseConfigTest";
 import HttpStatusCodes from "../../util/HttpStatusCodes";
 
 describe("Auth process: Happy path", () => {
