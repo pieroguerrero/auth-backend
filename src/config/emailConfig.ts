@@ -1,4 +1,4 @@
-import { IEmailProvider } from "api/Interfaces/emailInterfaces";
+import { IEmailProvider } from "api/interfaces/emailInterfaces";
 import nodemailer from "nodemailer";
 import envValues from "./envConfig";
 

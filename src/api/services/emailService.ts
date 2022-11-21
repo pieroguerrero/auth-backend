@@ -1,4 +1,5 @@
-import { IEmailProvider } from "api/Interfaces/emailInterfaces";
+import { IEmailProvider } from "../../api/interfaces/emailInterfaces";
+import { UtilConstants } from "../util/UtilContants";
 import GmailConfig from "../../config/emailConfig";
 
 /**
@@ -41,13 +42,8 @@ const sendEmail = async (
  * @param text
  * @param html
  */
-const sendGmailEmail = (
-  to: string,
-  subject: string,
-  text: string,
-  html: string
-) => {
-  return sendEmail(GmailConfig, to, subject, text, html);
+const sendGmailEmail = (to: string, subject: string, html: string) => {
+  return sendEmail(GmailConfig, to, subject, "", html);
 };
 
 /**
@@ -61,11 +57,16 @@ const sendVerificationEmail = async (
   verificationURL: string
 ) => {
   //send email
+
+  const htmlEmailTemplate =
+    UtilConstants.CONFIRMATION_EMAIL_HTML_TEMPLATE.replace(
+      UtilConstants.TOKEN_LINK_NAME,
+      verificationURL
+    );
   return await sendGmailEmail(
     userEmail,
     "Email Confirmation",
-    "Confirm your email: " + verificationURL,
-    "" //no HTML template
+    htmlEmailTemplate
   );
 };
 

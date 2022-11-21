@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
-import { generalValues } from "../api/util/Enums";
 dotenv.config();
 
 const envValues = Object.freeze({
+  NodeEnv: process.env.NODE_ENV || "production",
   /**
    * Port number to be used by the current application
    */
@@ -10,7 +10,7 @@ const envValues = Object.freeze({
   /**
    * A value to use used as seed by the JWT jsonwebtoken library in order to sign the payload.
    */
-  jwtSecretToken: process.env.SECRET_TOKEN_KEY || generalValues.NO_SECRET_KEY,
+  jwtSecretToken: process.env.SECRET_TOKEN_KEY || "no-secret-key",
   /**
    * MongoDB full connection string.
    */
@@ -50,6 +50,40 @@ const envValues = Object.freeze({
    * Gmail email sender password
    */
   GmailPassword: process.env.EMAIL_GMAIL_PASS || "",
+  /**
+   * Secret key to perform Email Verification testing with Jest and Supertest. You can get one free at: https://mailslurp.com/
+   */
+  MailSlurpSecretKey: process.env.EMAIL_MAILSLURP_KEY || "",
+  /**
+   * Establishes the time in milliseconds in wich an IP can make a certain number of calls
+   */
+  RateLimitTime: process.env.RATE_LIMIT_TIME_IN_MS
+    ? parseInt(process.env.RATE_LIMIT_TIME_IN_MS)
+    : 60000,
+  /**
+   * Establishes the number of calls that can be made in the time set by RateLimitTime
+   */
+  RateLimitNumberOfCalls: process.env.RATE_LIMIT_MAX_CALLS
+    ? parseInt(process.env.RATE_LIMIT_MAX_CALLS)
+    : 5,
+  /**
+   * How long to keep records of requests in memory.
+   */
+  SpeedLimitTimeWindow: process.env.SPEED_LIMIT_TIME_WINDOW_IN_MS
+    ? parseInt(process.env.SPEED_LIMIT_TIME_WINDOW_IN_MS)
+    : 30000,
+  /**
+   * Max number of connections during SpeedLimitTimeWindow before starting to delay responses. Defaults to 1. Set to 0 to disable delaying.
+   */
+  SpeedLimiteDelayAfter: process.env.SPEED_LIMIT_DELAY_AFTER
+    ? parseInt(process.env.SPEED_LIMIT_DELAY_AFTER)
+    : 1,
+  /**
+   * How long to delay the response, multiplied by (number recent hits - SpeedLimiteDelayAfter). Defaults to 1000 (1 second). Set to 0 to disable delaying.
+   */
+  SpeedLimitDelayingTime: process.env.SPEE_LIMIT_DELAYING_TIME_IN_MS
+    ? parseInt(process.env.SPEE_LIMIT_DELAYING_TIME_IN_MS)
+    : 1000,
 });
 
 export default envValues;

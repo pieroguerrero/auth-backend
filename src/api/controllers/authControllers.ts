@@ -1,5 +1,5 @@
-import { IAuthPayload } from "../Interfaces/shared";
-import { Request, Response } from "express";
+import { IAuthPayload } from "../interfaces/shared";
+import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import passport from "passport";
@@ -29,7 +29,11 @@ const returnErrorMessage = (res: Response, errorMessage: unknown) => {
   res.status(HttpStatusCodes.BAD_REQUEST).json({ message: errorMessage });
 };
 
-const registerUser = async (req: Request, res: Response) => {
+const registerUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
@@ -67,8 +71,9 @@ const registerUser = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCodes.OK).json({ username: user.username });
   } catch (error) {
-    returnErrorMessage(res, error);
+    next(error);
   }
+  return;
 };
 
 const signUp = [
@@ -87,10 +92,11 @@ const signUp = [
   registerUser,
 ];
 
-const signIn = async (req: Request, res: Response) => {
+//TODO: create a middleware or validator to receive username and password
+const signIn = async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("local", { session: false }, (error, user: IUser) => {
     if (error || !user) {
-      res.status(HttpStatusCodes.BAD_REQUEST).json({ message: error });
+      returnErrorMessage(res, error ? error : "No User Found");
       return;
     }
 
@@ -112,11 +118,11 @@ const signIn = async (req: Request, res: Response) => {
 
       res.status(HttpStatusCodes.OK).json({ ...payload, token });
     } catch (error) {
-      res.status(HttpStatusCodes.BAD_REQUEST).json({ message: error });
+      next(error);
     }
 
     return;
-  })(req, res);
+  })(req, res, next);
 };
 
 const verifyAccount = async (req: Request, res: Response) => {
