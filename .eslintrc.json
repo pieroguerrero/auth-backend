@@ -15,7 +15,7 @@
   "rules": {
     "no-console": "off",
     "prefer-template": "off",
-    "quotes": ["error", "double"],
+    "quotes": ["warn", "double"],
     "react/prop-types": "off"
   }
 }

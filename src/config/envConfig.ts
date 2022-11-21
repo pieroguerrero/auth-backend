@@ -1,5 +1,4 @@
 import * as dotenv from "dotenv";
-import { generalValues } from "../api/util/Enums";
 dotenv.config();
 
 const envValues = Object.freeze({
@@ -10,7 +9,7 @@ const envValues = Object.freeze({
   /**
    * A value to use used as seed by the JWT jsonwebtoken library in order to sign the payload.
    */
-  jwtSecretToken: process.env.SECRET_TOKEN_KEY || generalValues.NO_SECRET_KEY,
+  jwtSecretToken: process.env.SECRET_TOKEN_KEY || "no-secret-key",
   /**
    * MongoDB full connection string.
    */
@@ -50,6 +49,10 @@ const envValues = Object.freeze({
    * Gmail email sender password
    */
   GmailPassword: process.env.EMAIL_GMAIL_PASS || "",
+  /**
+   * Secret key to perform Email Verification testing with Jest and Supertest. You can get one free at: https://mailslurp.com/
+   */
+  MailSlurpSecretKey: process.env.EMAIL_MAILSLURP_KEY || "",
 });
 
 export default envValues;

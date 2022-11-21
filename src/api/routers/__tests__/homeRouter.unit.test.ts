@@ -1,17 +1,12 @@
 import request from "supertest";
-import { configureApp } from "../../../config/tests/appConfigTest";
-import { getHomeRouter } from "../homeRoutes";
+import configureApp from "../../../config/appConfig";
 import HttpStatusCodes from "../../util/HttpStatusCodes";
 
 const testApp = configureApp();
 
-beforeEach(() => {
-  testApp.use("/", getHomeRouter());
-});
-
 test("About Page", (done) => {
   request(testApp)
-    .get("/about")
+    .get("/api/home/about")
     .expect("Content-Type", /json/)
     .expect({ message: "About!" })
     .expect(HttpStatusCodes.OK, done);

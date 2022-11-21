@@ -52,10 +52,10 @@
  ┃ ┣ 📂controllers  => Orchestrators that use Services and Middlewares to provide a response.
  ┃ ┣ 📂interfaces  => Typescript Interface and Type definitions to be used in the project.
  ┃ ┣ 📂middlewares  => Functions to be executed before the Router's main controllers.
- ┃ ┣ 📂models  => Entity definitions that encapsulate Database and ORM services.
+ ┃ ┣ 📂models  => Entity definitions that encapsulate Database and ORM apis.
  ┃ ┣ 📂routers  => Routers of the application.
  ┃ ┣ 📂services  => Functions containing the all the Business Logic of the application.
- ┃ ┗ 📂util  => Functions used in across the folders in multiple times.
+ ┃ ┗ 📂util  => Functions used multiple times across the folders in the project.
  ┣ 📂config  => Configuration for the different components of the application.
  ┣ 📂public  => Publicly available resources.
  ┗ 📜index.ts  => Main file that starts the database and the main application.
