@@ -1,3 +1,5 @@
+import errorHandler from "../api/middlewares/errorHandler";
+import notFound from "../api/middlewares/notFound";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -15,6 +17,9 @@ const configureApp = () => {
 
   //#region Settings
   app.set("port", config.Port);
+
+  //Setting when the server is behing a Load Balancer or a Reverse Proxy, making the rate limiter effectively a global one and blocking all requests once the limit is reached. Check more at: https://github.com/express-rate-limit/express-rate-limit
+  app.set("trust proxy", 1 /*numberOfProxies*/);
   //#endregion
 
   //#region Middlewares
@@ -37,6 +42,9 @@ const configureApp = () => {
   app.use("/api/home/", getHomeRouter());
   app.use("/api/auth", getAuthRouter());
   app.use("/api/user/", getUserRouter());
+
+  app.use(notFound);
+  app.use(errorHandler);
 
   return app;
 };

@@ -29,7 +29,11 @@ const returnErrorMessage = (res: Response, errorMessage: unknown) => {
   res.status(HttpStatusCodes.BAD_REQUEST).json({ message: errorMessage });
 };
 
-const registerUser = async (req: Request, res: Response) => {
+const registerUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
@@ -67,8 +71,9 @@ const registerUser = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCodes.OK).json({ username: user.username });
   } catch (error) {
-    returnErrorMessage(res, error);
+    next(error);
   }
+  return;
 };
 
 const signUp = [
@@ -91,7 +96,7 @@ const signUp = [
 const signIn = async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("local", { session: false }, (error, user: IUser) => {
     if (error || !user) {
-      res.status(HttpStatusCodes.BAD_REQUEST).json({ message: error });
+      returnErrorMessage(res, error ? error : "No User Found");
       return;
     }
 
@@ -113,7 +118,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
 
       res.status(HttpStatusCodes.OK).json({ ...payload, token });
     } catch (error) {
-      res.status(HttpStatusCodes.BAD_REQUEST).json({ message: error });
+      next(error);
     }
 
     return;

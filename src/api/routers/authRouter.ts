@@ -1,10 +1,13 @@
 import { signIn, signUp, verifyAccount } from "../controllers/authControllers";
 import { Router } from "express";
+import numberOfCallsLimiter from "../middlewares/numberOfCallsLimiter";
+import speedOfCallsLimiter from "../middlewares/speedOfCallsLimiter";
 
 const getAuthRouter = () => {
   const router = Router();
 
-  router.post("/signup", signUp);
+  //We protect the SignUp method to be called many times
+  router.post("/signup", numberOfCallsLimiter, speedOfCallsLimiter, signUp);
 
   router.post("/signin", signIn);
 
