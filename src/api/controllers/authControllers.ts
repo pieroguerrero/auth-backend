@@ -100,7 +100,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    //We create the payload to be encrypted then in the JWT
+    //We create the payload to be encrypted then in the JWT token
     const payload: IAuthPayload = {
       id: user._id,
       username: user.username,
@@ -111,7 +111,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       //generate a signed json web token and return it in the response
       const token = generateAuthorizationToken(payload);
 
-      //assign our jwt to the cookie. If you comment his, then you are goin to use: Authorizarion Bearer <Token>
+      //assign our jwt to the cookie. If there is no cookie set to true in the env variables file, then you are goin to use: Authorizarion Bearer <Token>
       if (envValues.tokenFromCookie) {
         res.cookie(envValues.jwtCookieName, token, { httpOnly: true });
       }
@@ -145,7 +145,6 @@ const verifyAccount = async (req: Request, res: Response) => {
     }
 
     user.verified = true;
-
     await user.save();
 
     res

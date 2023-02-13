@@ -1,4 +1,4 @@
-import { IEmailProvider } from "../../api/interfaces/emailInterfaces";
+import { IEmailProvider } from "../interfaces/emailInterfaces";
 import { UtilConstants } from "../util/UtilContants";
 import GmailConfig from "../../config/emailConfig";
 
