@@ -20,7 +20,7 @@
 
 ## General Information
 - This project was created to fullfil the need several Software Engineers have when trying to create a Fullstack Web project from scratch.
-- It provides the source code backend template to authenticate and authorize users by exposing RESTful APIs. It also secures the APIs with techniques such as Limiting the number of calls pero IP and delaying the calls reponse.
+- It provides the source code backend template to authenticate and authorize users by exposing RESTful APIs. It also secures the APIs with techniques such as Limiting the number of calls per IP and delaying the calls reponse.
 
 ## Features
 - Username and password signup ✔
